@@ -13,16 +13,17 @@ async function read(req, res) {
 
 async function theatersShowing(req, res) {
   const data = await service.theatersShowing();
-  res.json({ data });
+  res.status(200).json({ data });
 }
 
-function reviewsForMovie(req, res) {
-
+async function reviewsForMovie(req, res) {
+  const data = await service.reviewsForMovie();
+  res.status(200).json({ data });
 }
 
 module.exports = {
   list: asyncErrorBoundary(list),
   read: [asyncErrorBoundary(movieExists), asyncErrorBoundary(read)],
   theatersShowing: [asyncErrorBoundary(movieExists), asyncErrorBoundary(theatersShowing)],
-  reviewsForMovie: [asyncErrorBoundary(reviewsForMovie)]
+  reviewsForMovie: [asyncErrorBoundary(movieExists), asyncErrorBoundary(reviewsForMovie)]
 }
