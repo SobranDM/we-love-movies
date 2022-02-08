@@ -1,21 +1,6 @@
 const knex = require("../db/connection");
 const nestCritic = require("../utils/nestCritic");
 
-// Middleware functions
-async function movieExists(req, res, next) {
-    const { movieId } = req.params;
-
-    const movie = await read(movieId);
-    if (movie) {
-        res.locals.movie = movie;
-        return next();
-    }
-    return next({
-        status: 404,
-        message: `Movie cannot be found with id ${movieId}.`,
-    });
-}
-
 // Method handlers
 function list() {
     if (req.query.is_showing === "true") {
@@ -48,7 +33,7 @@ function theatersShowing() {
 async function reviewsForMovie() {
     const { movieId } = req.params;
 
-    let reviews = await knex("reviews")
+    return knex("reviews")
         .join("critics", "reviews.critic_id", "critics.critic_id")
         .select(
             "reviews.*",
@@ -59,14 +44,12 @@ async function reviewsForMovie() {
             "critics.updated_at as critic_updated_at"
         )
         .where({ movie_id: movieId })
-    reviews.forEach((review) => nestCritic(review));
-    return reviews;
+        .then((reviews) => reviews.map(nestCritic))
 }
 
 module.exports = {
     list,
     read,
-    movieExists,
     theatersShowing,
     reviewsForMovie,
 };

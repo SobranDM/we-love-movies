@@ -1,20 +1,6 @@
 const knex = require("../db/connection");
 const nestCritic = require("../utils/nestCritic");
 
-// Middleware functions
-async function reviewExists(req, res, next) {
-  const { reviewId } = req.params;
-
-  const review = await read(reviewId);
-  if (review) {
-    return next();
-  }
-  return next ({
-    status: 404,
-    message: `Review ${reviewId} cannot be found.`
-  })
-}
-
 // Method functions
 function read(reviewId) {
   return knex("reviews").select("*").where({ review_id: reviewId });
@@ -29,7 +15,7 @@ async function update(updatedReview) {
     .select("*")
     .where({ review_id: updatedReview.review_id })
     .update(updatedReview, "*")
-  let review = await knex("reviews")
+  return knex("reviews")
     .join("critics", "critics.critic_id", "reviews.critic_id")
     .select(
       "reviews.*",
@@ -41,12 +27,10 @@ async function update(updatedReview) {
   )
   .where({ movie_id: movieId })
   .first()
-review = nestCritic(review);
-return review;
+  .then((reviews) => reviews.map(nestCritic))
 }
 
 module.exports = {
-  reviewExists,
   destroy,
   update
 }
