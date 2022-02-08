@@ -18,11 +18,11 @@ async function movieExists(req, res, next) {
 async function list(req, res) {
   if (req.query.is_showing === "true") {
     const data = await service.listShowing();
+    res.json({ data });
   } else {
     const data = await service.list();
+    res.json({ data });
   }
-  
-  res.json({ data });
 }
 
 function read(req, res) {
