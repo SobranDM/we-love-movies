@@ -16,7 +16,12 @@ async function movieExists(req, res, next) {
 }
 
 async function list(req, res) {
-  const data = await service.list();
+  if (req.query.is_showing === "true") {
+    const data = await service.listShowing();
+  } else {
+    const data = await service.list();
+  }
+  
   res.json({ data });
 }
 
@@ -26,12 +31,14 @@ function read(req, res) {
 }
 
 async function theatersShowing(req, res) {
-  const data = await service.theatersShowing();
+  const { movieId } = req.params;
+  const data = await service.theatersShowing(movieId);
   res.status(200).json({ data });
 }
 
 async function reviewsForMovie(req, res) {
-  const data = await service.reviewsForMovie();
+  const { movieId } = req.params;
+  const data = await service.reviewsForMovie(movieId);
   res.status(200).json({ data });
 }
 
