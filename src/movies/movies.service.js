@@ -30,6 +30,7 @@ async function reviewsForMovie(movieId) {
     .select(
       "reviews.*",
       "critics.critic_id",
+      "critics.preferred_name",
       "critics.surname",
       "critics.organization_name",
       "critics.created_at as critic_created_at",
