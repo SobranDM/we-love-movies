@@ -3,7 +3,7 @@ const nestCritic = require("../utils/nestCritic");
 
 // Method functions
 function read(reviewId) {
-  return knex("reviews").select("*").where({ review_id: reviewId });
+  return knex("reviews").select("*").where({ review_id: reviewId }).first();
 }
 
 function destroy(reviewId) {
@@ -18,16 +18,10 @@ async function update(updatedReview, reviewId) {
 
   return knex("reviews")
     .join("critics", "critics.critic_id", "reviews.critic_id")
-    .select(
-      "reviews.*",
-      "critics.critic_id",
-      "critics.critic_id as critic_critic_id",
-      "critics.preferred_name",
-      "critics.surname",
-      "critics.organization_name"
-    )
+    .select("*")
     .where({ review_id: reviewId })
-    .then((reviews) => reviews.map(nestCritic))
+    .first()
+    .then((nestCritic))
 }
 
 module.exports = {

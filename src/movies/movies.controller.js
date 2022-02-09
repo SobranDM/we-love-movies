@@ -15,13 +15,13 @@ async function movieExists(req, res, next) {
 }
 
 async function list(req, res) {
-  if (req.query.is_showing === "true") {
-    const data = await service.listShowing();
-    res.json({ data });
+  let result;
+  if (req.query.is_showing) {
+    result = await service.listShowing();
   } else {
-    const data = await service.list();
-    res.json({ data });
+    result = await service.list();
   }
+  res.json({ data: result });
 }
 
 function read(req, res) {

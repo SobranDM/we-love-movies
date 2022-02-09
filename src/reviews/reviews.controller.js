@@ -22,7 +22,7 @@ async function destroy(req, res) {
 async function update(req, res) {
   const { reviewId } = req.params;
   const result = await service.update(req.body.data, reviewId);
-  res.status(200).json({ data: result[0] });
+  res.status(200).json({ data: result });
 }
 
 module.exports = {
