@@ -1,7 +1,8 @@
 const service = require("./theaters.service");
 
-function list(req, res) {
-  res.sendStatus(200);
+async function list(req, res) {
+  const data = await service.list();
+  res.status(200).json({ data });
 }
 
 module.exports = {
